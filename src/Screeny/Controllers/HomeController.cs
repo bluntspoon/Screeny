@@ -6,57 +6,53 @@ using System.Web.Mvc;
 
 namespace Screeny.Controllers
 {
-  public class HomeController : Controller
-  {
-    public ActionResult Index()
+    public class HomeController : Controller
     {
-      ViewBag.Message = "";
-      return View();
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Index(HttpPostedFileBase photo)
+        {
+            var directory = ConfigurationManager.AppSettings["PhotosStoragePath"];
+            if (photo != null && photo.ContentLength > 0)
+            {
+                try
+                {
+                    CreateFolderIfNeeded(directory);
+                    var fileName = Path.GetFileName(photo.FileName);
+                    fileName = string.Format(@"{0}_" + fileName, DateTime.Now.ToString("yyyyMMddHHmmss"));
+                    photo.SaveAs(Path.Combine(directory, fileName));
+                    ViewBag.Message = "File uploaded successfully!\n New Filename: " + fileName;
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Message = "ERROR:" + ex.Message;
+                }
+            }
+            else
+            {
+                ViewBag.Message = "You have not specified a file.";
+            }
+
+            return View("Index");
+        }
+
+        private void CreateFolderIfNeeded(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                try
+                {
+                    Directory.CreateDirectory(path);
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+
     }
-
-    [HttpPost]
-    public ActionResult Index(HttpPostedFileBase photo)
-    {
-      string directory = ConfigurationManager.AppSettings["PhotosStoragePath"];
-
-      if (photo != null && photo.ContentLength > 0)
-      {
-        try
-        {
-          var fileName = Path.GetFileName(photo.FileName);
-          photo.SaveAs(Path.Combine(directory, fileName));
-          ViewBag.Message = "File uploaded successfully";
-        }
-        catch (Exception ex)
-        {
-          ViewBag.Message = "ERROR:" + ex.Message.ToString();
-        }
-      }
-      else
-      {
-        ViewBag.Message = "You have not specified a file.";
-      }
-
-      return View();
-    }
-
-    private bool CreateFolderIfNeeded(string path)
-    {
-      bool result = true;
-      if (!Directory.Exists(path))
-      {
-        try
-        {
-          Directory.CreateDirectory(path);
-        }
-        catch (Exception)
-        {
-          /*TODO: You must process this exception.*/
-          result = false;
-        }
-      }
-      return result;
-    }
-
-  }
 }
