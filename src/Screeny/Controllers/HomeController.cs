@@ -16,7 +16,7 @@ namespace Screeny.Controllers
         [HttpPost]
         public ActionResult Index(HttpPostedFileBase photo)
         {
-            var directory = ConfigurationManager.AppSettings["PhotosStoragePath"];
+            var directory = Server.MapPath("~/screenshots");
             if (photo != null && photo.ContentLength > 0)
             {
                 try
@@ -38,6 +38,12 @@ namespace Screeny.Controllers
             }
 
             return View("Index");
+        }
+
+        public ActionResult Browse()
+        {
+            ViewBag.Directory = Server.MapPath("~/screenshots"); 
+            return View();
         }
 
         private void CreateFolderIfNeeded(string path)

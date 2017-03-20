@@ -2,12 +2,6 @@
   ViewBag.Title = "Screeny";
 }
 
-<div class="jumbotron">
-  <h1>Screeny</h1>
-  <p class="lead">App to help with uploading images from devices... Poker Web Client Team!</p>
-</div>
-
-
 @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
   <div class="row">
@@ -25,7 +19,5 @@
       </div>
     </div>
 }
-
-
 <hr />
 

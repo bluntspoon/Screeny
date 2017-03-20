@@ -9,15 +9,12 @@ namespace Screeny
 {
   public class RouteConfig
   {
-    public static void RegisterRoutes(RouteCollection routes)
-    {
-      routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
-      routes.MapRoute(
-          name: "Default",
-          url: "{controller}/{action}/{id}",
-          defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
-      );
-    }
+      public static void RegisterRoutes(RouteCollection routes)
+      {
+          routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+          routes.MapRoute("Default", "", new {controller = "Home", action = "Index"});
+          routes.MapRoute("Upload", "Upload", new {controller = "Home", action = "Index"});
+          routes.MapRoute("Browse", "Browse", new {controller = "Home", action = "Browse" });
+      }
   }
 }
